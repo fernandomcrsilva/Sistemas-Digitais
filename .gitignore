@@ -1,0 +1,12 @@
+# Arduino
+*.hex
+*.elf
+build/
+
+# EasyEDA / exportações temporárias
+*.tmp
+~$*
+
+# Sistema
+.DS_Store
+Thumbs.db
