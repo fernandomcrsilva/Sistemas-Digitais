@@ -1,0 +1,144 @@
+#!/usr/bin/env python3
+"""Extrai a conectividade das folhas 1 e 3 de conferencia_carga.json do jeito que o
+EasyEDA faz (fios que se tocam, pinos sobre fios, rotulos de net e bandeiras VCC/GND)
+e confere pino a pino contra a netlist de gerar_netlist.py. Pega toco que nao encosta
+no pino, rotulo errado, curto e pino esquecido.
+
+Uso:  python3 esquema/teste_esquema.py   ->  termina com "teste_esquema: OK"
+"""
+import json
+from pathlib import Path
+
+from gerar_netlist import comps
+from gerar_esquema import NOME, MEGA_PINO
+
+NET = {des: pins for des, _, _, _, pins in comps}
+EPS = 0.01
+
+
+def sobre(p, a, b):
+    """p esta no segmento a-b?"""
+    (px, py), (ax, ay), (bx, by) = p, a, b
+    if abs((bx - ax) * (py - ay) - (by - ay) * (px - ax)) > EPS * max(1, abs(bx - ax) + abs(by - ay)):
+        return False
+    return min(ax, bx) - EPS <= px <= max(ax, bx) + EPS and min(ay, by) - EPS <= py <= max(ay, by) + EPS
+
+
+class Uniao:
+    def __init__(self):
+        self.pai = {}
+
+    def achar(self, a):
+        self.pai.setdefault(a, a)
+        while self.pai[a] != a:
+            self.pai[a] = self.pai[self.pai[a]]
+            a = self.pai[a]
+        return a
+
+    def unir(self, a, b):
+        self.pai[self.achar(a)] = self.achar(b)
+
+
+def conectividade(shapes):
+    fios, pinos, rotulos = [], [], []           # (id, [pontos]) ; (id, ponto) ; (nome, ponto)
+    for sh in shapes:
+        t = sh.split("~")[0]
+        if t == "W":
+            v = [float(x) for x in sh.split("~")[1].split()]
+            fios.append((f"W{len(fios)}", list(zip(v[::2], v[1::2]))))
+        elif t == "N":
+            c = sh.split("~")
+            rotulos.append((c[5], (float(c[1]), float(c[2]))))
+        elif t == "F":
+            seg = sh.split("^^")
+            c = seg[0].split("~")
+            rotulos.append((seg[2].split("~")[0], (float(c[2]), float(c[3]))))
+        elif t == "LIB":
+            partes = sh.split("#@$")
+            des = next(p.split("~")[12] for p in partes if p.startswith("T~P~"))
+            for p in partes:
+                if p.startswith("P~"):
+                    c = p.split("^^")[0].split("~")
+                    pinos.append(((des, c[3]), (float(c[4]), float(c[5]))))
+    u = Uniao()
+    for fid, pts in fios:                       # fio: uma so ilha
+        for k in range(len(pts)):
+            u.unir(fid, (fid, k))
+
+    def toca(ponto):
+        """Ids dos fios/pinos que o ponto encosta."""
+        ids = []
+        for fid, pts in fios:
+            if any(abs(px - x) < EPS and abs(py - y) < EPS for x, y in pts for px, py in [ponto]) or \
+               any(sobre(ponto, pts[k], pts[k + 1]) for k in range(len(pts) - 1)):
+                ids.append(fid)
+        for pid, pt in pinos:
+            if abs(pt[0] - ponto[0]) < EPS and abs(pt[1] - ponto[1]) < EPS:
+                ids.append(pid)
+        return ids
+
+    for fid, pts in fios:                       # fio encostando em outro fio ou em pino
+        for pt in (pts[0], pts[-1]):
+            for outro in toca(pt):
+                u.unir(fid, outro)
+    for pid, pt in pinos:
+        for outro in toca(pt):
+            u.unir(pid, outro)
+    for nome, pt in rotulos:
+        for outro in toca(pt):
+            u.unir(("NET", nome), outro)
+    grupos = {}
+    for pid, _ in pinos:
+        grupos.setdefault(u.achar(pid), {"pinos": set(), "nomes": set()})["pinos"].add(pid)
+    for nome, _ in rotulos:
+        r = u.achar(("NET", nome))
+        if r in grupos:
+            grupos[r]["nomes"].add(nome)
+    return grupos, {pid for pid, _ in pinos}
+
+
+MEGA1 = {f"D{22 + b}": f"N0_{b}" for b in range(10)}          # caixa desenhada da folha 1 (pinos com nome)
+MEGA1.update({"D32": "B_0", "D33": "B_1", "A0": "A0_CURSOR", "A1": "A1_CURSOR", "5V": "VCC", "GND": "GND"})
+
+
+def verificar(shapes, mega, ignorar=()):
+    """Confere uma folha contra a netlist; `mega` mapeia pino do simbolo do Arduino -> net."""
+    grupos, presentes = conectividade(shapes)
+    esperado = {(des, num): net for des, pins in NET.items() for num, net in pins.items()}
+    esperado.update({("M1", nome): net for nome, net in mega.items()})
+    faltam = [p for p in esperado if p not in presentes]
+    assert not faltam, f"pinos da netlist ausentes no esquema: {faltam}"
+    for p in ignorar:
+        esperado.pop(p)
+    por_net = {}
+    for pino, net in esperado.items():
+        por_net.setdefault(net, set()).add(pino)
+    erros = []
+    for net, pins in por_net.items():
+        raizes = {r for r, g in grupos.items() if g["pinos"] & pins}
+        if len(raizes) != 1:
+            ilhas = [sorted(grupos[r]["pinos"] & pins) for r in raizes]
+            erros.append(f"{net}: pinos em {len(raizes)} ilhas: {sorted(ilhas, key=len)[:-1]} separados do resto")
+            continue
+        g = grupos[raizes.pop()]
+        intrusos = {p for p in g["pinos"] if p in esperado and esperado[p] != net}
+        if intrusos:
+            erros.append(f"{net}: em curto com {sorted(intrusos)}")
+        nomes = {n for n in g["nomes"]}
+        if nomes and nomes != {NOME.get(net, net)}:
+            erros.append(f"{net}: rotulos {sorted(nomes)}")
+    assert not erros, "\n".join(erros)
+    tps = [p for p in presentes if p[0].startswith("TP")]
+    for tp in tps:                              # cada ponto de teste ligado a exatamente uma net com nome
+        r = next(r for r, g in grupos.items() if tp in g["pinos"])
+        assert len(grupos[r]["nomes"]) == 1 and grupos[r]["pinos"] & set(esperado), f"{tp} solto"
+    return len(esperado), len(por_net), len(tps)
+
+
+if __name__ == "__main__":
+    folhas = json.loads((Path(__file__).parent / "conferencia_carga.json").read_text(encoding="utf-8"))["schematics"]
+    # folha 1: terminais 2 e 4 dos botoes tateis sao ligados internamente a 1 e 3 e ficam sem fio no desenho
+    n = verificar(folhas[0]["dataStr"]["shape"], MEGA1, [(sw, p) for sw in ("SW1", "SW2") for p in ("2", "4")])
+    print(f"teste_esquema: folha 1 OK ({n[0]} pinos, {n[1]} nets, {n[2]} pontos de teste)")
+    n = verificar(folhas[2]["dataStr"]["shape"], MEGA_PINO)
+    print(f"teste_esquema: folha 3 OK ({n[0]} pinos, {n[1]} nets)")

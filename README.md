@@ -49,8 +49,8 @@ Dois sensores analógicos → Validação + conferência → Soma autorizada →
 ## Status
 
 - [ ] Modelagem lógica revisada
-- [ ] Sketch escrito e testado
-- [ ] Esquema no EasyEDA
+- [x] Sketch escrito e testado (teste de host em `sketch/teste_host.cpp`)
+- [x] Esquema no EasyEDA (4 folhas: circuito com símbolos da biblioteca LCSC, notas, montagem com o Arduino e peças da Commons Library, protoboard; falta preencher integrantes)
 - [ ] Protótipo montado
 - [ ] Testes de integração registrados
 - [ ] Arquivos publicados em `turma6a-<matricula>/` no repositório do professor

@@ -1,0 +1,748 @@
+{
+  "gge1": {
+    "props": {
+      "Designator": "RV1",
+      "DeviceName": "",
+      "value": "10k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "VCC",
+      "2": "A0_CURSOR",
+      "3": "GND"
+    }
+  },
+  "gge2": {
+    "props": {
+      "Designator": "RV2",
+      "DeviceName": "",
+      "value": "10k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "VCC",
+      "2": "A1_CURSOR",
+      "3": "GND"
+    }
+  },
+  "gge3": {
+    "props": {
+      "Designator": "SW1",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "VCC",
+      "2": "VCC",
+      "3": "P0",
+      "4": "P0"
+    }
+  },
+  "gge4": {
+    "props": {
+      "Designator": "Rpd1",
+      "DeviceName": "",
+      "value": "10k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "P0",
+      "2": "GND"
+    }
+  },
+  "gge5": {
+    "props": {
+      "Designator": "SW2",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "VCC",
+      "2": "VCC",
+      "3": "P1",
+      "4": "P1"
+    }
+  },
+  "gge6": {
+    "props": {
+      "Designator": "Rpd2",
+      "DeviceName": "",
+      "value": "10k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "P1",
+      "2": "GND"
+    }
+  },
+  "gge7": {
+    "props": {
+      "Designator": "U1",
+      "DeviceName": "74HC04",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "FALHA",
+      "2": "nFALHA",
+      "3": "DIFERENTE",
+      "4": "IGUAL",
+      "5": "EXCESSO",
+      "6": "nEXCESSO",
+      "9": "GND",
+      "11": "GND",
+      "13": "GND",
+      "7": "GND",
+      "14": "VCC"
+    }
+  },
+  "gge8": {
+    "props": {
+      "Designator": "U2",
+      "DeviceName": "74HC32",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "7": "GND",
+      "14": "VCC",
+      "1": "N0_3",
+      "2": "N0_2",
+      "3": "FALHA",
+      "4": "d1",
+      "5": "d0",
+      "6": "DIFERENTE",
+      "9": "S3",
+      "10": "S2",
+      "8": "EXCESSO",
+      "12": "FALHA",
+      "13": "EXCESSO",
+      "11": "ALARME"
+    }
+  },
+  "gge9": {
+    "props": {
+      "Designator": "U3",
+      "DeviceName": "74HC86",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "7": "GND",
+      "14": "VCC",
+      "1": "N0_1",
+      "2": "P1",
+      "3": "d1",
+      "4": "N0_0",
+      "5": "P0",
+      "6": "d0",
+      "9": "GND",
+      "10": "GND",
+      "12": "GND",
+      "13": "GND"
+    }
+  },
+  "gge10": {
+    "props": {
+      "Designator": "U4",
+      "DeviceName": "74HC08",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "7": "GND",
+      "14": "VCC",
+      "1": "N0_1",
+      "2": "H",
+      "3": "Ae1",
+      "4": "N0_0",
+      "5": "H",
+      "6": "Ae0",
+      "9": "B_1",
+      "10": "H",
+      "8": "Be1",
+      "12": "B_0",
+      "13": "H",
+      "11": "Be0"
+    }
+  },
+  "gge11": {
+    "props": {
+      "Designator": "U5",
+      "DeviceName": "74HC08",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "7": "GND",
+      "14": "VCC",
+      "1": "nFALHA",
+      "2": "IGUAL",
+      "3": "H",
+      "4": "nFALHA",
+      "5": "DIFERENTE",
+      "6": "CONFERIR",
+      "9": "H",
+      "10": "nEXCESSO",
+      "8": "LIBERADO",
+      "12": "GND",
+      "13": "GND"
+    }
+  },
+  "gge12": {
+    "props": {
+      "Designator": "U6",
+      "DeviceName": "74HC283",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "5": "Ae0",
+      "6": "Be0",
+      "4": "S0",
+      "3": "Ae1",
+      "2": "Be1",
+      "1": "S1",
+      "14": "GND",
+      "15": "GND",
+      "13": "S2",
+      "12": "GND",
+      "11": "GND",
+      "10": "S3",
+      "7": "GND",
+      "9": "COUT",
+      "8": "GND",
+      "16": "VCC"
+    }
+  },
+  "gge13": {
+    "props": {
+      "Designator": "R1",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "N0_0",
+      "2": "LA_D1"
+    }
+  },
+  "gge14": {
+    "props": {
+      "Designator": "D1",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D1",
+      "2": "GND"
+    }
+  },
+  "gge15": {
+    "props": {
+      "Designator": "R2",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "N0_1",
+      "2": "LA_D2"
+    }
+  },
+  "gge16": {
+    "props": {
+      "Designator": "D2",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D2",
+      "2": "GND"
+    }
+  },
+  "gge17": {
+    "props": {
+      "Designator": "R3",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "N0_2",
+      "2": "LA_D3"
+    }
+  },
+  "gge18": {
+    "props": {
+      "Designator": "D3",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D3",
+      "2": "GND"
+    }
+  },
+  "gge19": {
+    "props": {
+      "Designator": "R4",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "N0_3",
+      "2": "LA_D4"
+    }
+  },
+  "gge20": {
+    "props": {
+      "Designator": "D4",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D4",
+      "2": "GND"
+    }
+  },
+  "gge21": {
+    "props": {
+      "Designator": "R5",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "N0_4",
+      "2": "LA_D5"
+    }
+  },
+  "gge22": {
+    "props": {
+      "Designator": "D5",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D5",
+      "2": "GND"
+    }
+  },
+  "gge23": {
+    "props": {
+      "Designator": "R6",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "N0_5",
+      "2": "LA_D6"
+    }
+  },
+  "gge24": {
+    "props": {
+      "Designator": "D6",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D6",
+      "2": "GND"
+    }
+  },
+  "gge25": {
+    "props": {
+      "Designator": "R7",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "N0_6",
+      "2": "LA_D7"
+    }
+  },
+  "gge26": {
+    "props": {
+      "Designator": "D7",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D7",
+      "2": "GND"
+    }
+  },
+  "gge27": {
+    "props": {
+      "Designator": "R8",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "N0_7",
+      "2": "LA_D8"
+    }
+  },
+  "gge28": {
+    "props": {
+      "Designator": "D8",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D8",
+      "2": "GND"
+    }
+  },
+  "gge29": {
+    "props": {
+      "Designator": "R9",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "N0_8",
+      "2": "LA_D9"
+    }
+  },
+  "gge30": {
+    "props": {
+      "Designator": "D9",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D9",
+      "2": "GND"
+    }
+  },
+  "gge31": {
+    "props": {
+      "Designator": "R10",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "N0_9",
+      "2": "LA_D10"
+    }
+  },
+  "gge32": {
+    "props": {
+      "Designator": "D10",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D10",
+      "2": "GND"
+    }
+  },
+  "gge33": {
+    "props": {
+      "Designator": "R11",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "B_0",
+      "2": "LA_D11"
+    }
+  },
+  "gge34": {
+    "props": {
+      "Designator": "D11",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D11",
+      "2": "GND"
+    }
+  },
+  "gge35": {
+    "props": {
+      "Designator": "R12",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "B_1",
+      "2": "LA_D12"
+    }
+  },
+  "gge36": {
+    "props": {
+      "Designator": "D12",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D12",
+      "2": "GND"
+    }
+  },
+  "gge37": {
+    "props": {
+      "Designator": "R13",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "S0",
+      "2": "LA_D13"
+    }
+  },
+  "gge38": {
+    "props": {
+      "Designator": "D13",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D13",
+      "2": "GND"
+    }
+  },
+  "gge39": {
+    "props": {
+      "Designator": "R14",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "S1",
+      "2": "LA_D14"
+    }
+  },
+  "gge40": {
+    "props": {
+      "Designator": "D14",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D14",
+      "2": "GND"
+    }
+  },
+  "gge41": {
+    "props": {
+      "Designator": "R15",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "S2",
+      "2": "LA_D15"
+    }
+  },
+  "gge42": {
+    "props": {
+      "Designator": "D15",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D15",
+      "2": "GND"
+    }
+  },
+  "gge43": {
+    "props": {
+      "Designator": "R16",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "S3",
+      "2": "LA_D16"
+    }
+  },
+  "gge44": {
+    "props": {
+      "Designator": "D16",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D16",
+      "2": "GND"
+    }
+  },
+  "gge45": {
+    "props": {
+      "Designator": "R17",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "CONFERIR",
+      "2": "LA_D17"
+    }
+  },
+  "gge46": {
+    "props": {
+      "Designator": "D17",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D17",
+      "2": "GND"
+    }
+  },
+  "gge47": {
+    "props": {
+      "Designator": "R18",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "ALARME",
+      "2": "LA_D18"
+    }
+  },
+  "gge48": {
+    "props": {
+      "Designator": "D18",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D18",
+      "2": "GND"
+    }
+  },
+  "gge49": {
+    "props": {
+      "Designator": "R19",
+      "DeviceName": "",
+      "value": "2.2k",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LIBERADO",
+      "2": "LA_D19"
+    }
+  },
+  "gge50": {
+    "props": {
+      "Designator": "D19",
+      "DeviceName": "",
+      "value": "",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "LA_D19",
+      "2": "GND"
+    }
+  },
+  "gge51": {
+    "props": {
+      "Designator": "C1",
+      "DeviceName": "",
+      "value": "100nF",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "GND",
+      "2": "VCC"
+    }
+  },
+  "gge52": {
+    "props": {
+      "Designator": "C2",
+      "DeviceName": "",
+      "value": "100nF",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "GND",
+      "2": "VCC"
+    }
+  },
+  "gge53": {
+    "props": {
+      "Designator": "C3",
+      "DeviceName": "",
+      "value": "100nF",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "GND",
+      "2": "VCC"
+    }
+  },
+  "gge54": {
+    "props": {
+      "Designator": "C4",
+      "DeviceName": "",
+      "value": "100nF",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "GND",
+      "2": "VCC"
+    }
+  },
+  "gge55": {
+    "props": {
+      "Designator": "C5",
+      "DeviceName": "",
+      "value": "100nF",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "GND",
+      "2": "VCC"
+    }
+  },
+  "gge56": {
+    "props": {
+      "Designator": "C6",
+      "DeviceName": "",
+      "value": "100nF",
+      "Supplier Part": ""
+    },
+    "pins": {
+      "1": "GND",
+      "2": "VCC"
+    }
+  }
+}
