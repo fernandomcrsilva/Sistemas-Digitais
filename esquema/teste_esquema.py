@@ -109,6 +109,98 @@ def conectividade(shapes):
     return grupos, {pid for pid, _ in pinos}
 
 
+def lint(shapes):
+    """Defeitos geometricos que o EasyEDA aceita mas enganam quem le: ponta de fio (ou pino) no
+    meio de outro fio sem ponto de juncao, fios sobrepostos no mesmo trecho, fio atravessando o
+    corpo de um simbolo, ponta de fio solta e juncao fora de fio."""
+    fios, juncoes, pinos, pontos_rot, corpos = [], [], [], [], []
+    for sh in shapes:
+        t = sh.split("~")[0]
+        if t == "W":
+            v = [float(x) for x in sh.split("~")[1].split()]
+            fios.append(list(zip(v[::2], v[1::2])))
+        elif t == "J":
+            c = sh.split("~")
+            juncoes.append((float(c[1]), float(c[2])))
+        elif t == "N":
+            c = sh.split("~")
+            pontos_rot.append((float(c[1]), float(c[2])))
+        elif t == "F":
+            c = sh.split("^^")[0].split("~")
+            pontos_rot.append((float(c[2]), float(c[3])))
+        elif t == "LIB":
+            partes = sh.split("#@$")
+            des = next(p.split("~")[12] for p in partes if p.startswith("T~P~"))
+            xs, ys = [], []
+            for p in partes[1:]:
+                k = p.split("~")[0]
+                if k == "P":
+                    c = p.split("^^")[0].split("~")
+                    pinos.append((des, c[3], (float(c[4]), float(c[5]))))
+                elif k == "R":
+                    c = p.split("~")
+                    xs += [float(c[1]), float(c[1]) + float(c[5])]
+                    ys += [float(c[2]), float(c[2]) + float(c[6])]
+                elif k in ("PL", "PG"):
+                    v = [float(x) for x in p.split("~")[1].split()]
+                    xs += v[::2]
+                    ys += v[1::2]
+                elif k == "E":
+                    c = p.split("~")
+                    xs += [float(c[1]) - float(c[3]), float(c[1]) + float(c[3])]
+                    ys += [float(c[2]) - float(c[4]), float(c[2]) + float(c[4])]
+            if xs:
+                corpos.append((des, min(xs), min(ys), max(xs), max(ys)))
+
+    def mesmo(a, b):
+        return abs(a[0] - b[0]) < EPS and abs(a[1] - b[1]) < EPS
+
+    def no_meio(p, pts):
+        return any(sobre(p, pts[k], pts[k + 1]) for k in range(len(pts) - 1)) and not mesmo(p, pts[0]) and not mesmo(p, pts[-1])
+
+    def em_juncao(p):
+        return any(mesmo(p, j) for j in juncoes)
+
+    def toca_ponta(p, i):
+        return any(mesmo(p, f[0]) or mesmo(p, f[-1]) for k, f in enumerate(fios) if k != i)
+
+    erros = []
+    for i, f in enumerate(fios):
+        for p in (f[0], f[-1]):
+            if any(no_meio(p, g) for k, g in enumerate(fios) if k != i) and not em_juncao(p):
+                erros.append(f"ponta de fio no meio de outro sem juncao em {p}")
+            preso = toca_ponta(p, i) or em_juncao(p) or any(mesmo(p, q) for _, _, q in pinos) or any(mesmo(p, q) for q in pontos_rot)
+            if not preso:
+                erros.append(f"ponta de fio solta em {p}")
+    for des, num, p in pinos:
+        if any(no_meio(p, g) for g in fios) and not em_juncao(p):
+            erros.append(f"pino {des}.{num} no meio de um fio sem juncao em {p}")
+    for j in juncoes:
+        if not any(any(sobre(j, f[k], f[k + 1]) for k in range(len(f) - 1)) for f in fios):
+            erros.append(f"juncao fora de fio em {j}")
+    segs = [(i, f[k], f[k + 1]) for i, f in enumerate(fios) for k in range(len(f) - 1)]
+    for a in range(len(segs)):
+        ia, p1, p2 = segs[a]
+        for b in range(a + 1, len(segs)):
+            ib, q1, q2 = segs[b]
+            dx, dy = p2[0] - p1[0], p2[1] - p1[1]
+            if abs(dx * (q1[1] - p1[1]) - dy * (q1[0] - p1[0])) > EPS or abs(dx * (q2[1] - p1[1]) - dy * (q2[0] - p1[0])) > EPS:
+                continue                                    # nao colineares
+            ln = dx * dx + dy * dy
+            t1 = ((q1[0] - p1[0]) * dx + (q1[1] - p1[1]) * dy) / ln
+            t2 = ((q2[0] - p1[0]) * dx + (q2[1] - p1[1]) * dy) / ln
+            if min(max(t1, t2), 1) - max(min(t1, t2), 0) > EPS:
+                erros.append(f"fios sobrepostos entre {p1}-{p2} e {q1}-{q2}")
+    for des, x0, y0, x1, y1 in corpos:
+        for f in fios:
+            for k in range(len(f) - 1):
+                (ax, ay), (bx, by) = f[k], f[k + 1]
+                if max(min(ax, bx), x0) + EPS < min(max(ax, bx), x1) and max(min(ay, by), y0) + EPS < min(max(ay, by), y1):
+                    if ax == bx or ay == by:                # fio ortogonal entrando no retangulo do corpo
+                        erros.append(f"fio {f[k]}-{f[k + 1]} atravessa o corpo de {des}")
+    return sorted(set(erros))
+
+
 MEGA1 = {f"D{22 + b}": f"N0_{b}" for b in range(10)}          # caixa desenhada da folha 1 (pinos com nome)
 MEGA1.update({"D32": "B_0", "D33": "B_1", "A0": "A0_CURSOR", "A1": "A1_CURSOR", "5V": "VCC", "GND": "GND"})
 
@@ -151,6 +243,10 @@ if __name__ == "__main__":
     folhas = json.loads((Path(__file__).parent / "conferencia_carga.json").read_text(encoding="utf-8"))["schematics"]
     # folha 1: terminais 2 e 4 dos botoes tateis sao ligados internamente a 1 e 3 e ficam sem fio no desenho
     n = verificar(folhas[0]["dataStr"]["shape"], MEGA1, [(sw, p) for sw in ("SW1", "SW2") for p in ("2", "4")])
-    print(f"teste_esquema: folha 1 OK ({n[0]} pinos, {n[1]} nets, {n[2]} pontos de teste)")
+    defeitos = lint(folhas[0]["dataStr"]["shape"])
+    assert not defeitos, "folha 1:\n" + "\n".join(defeitos)
+    print(f"teste_esquema: folha 1 OK ({n[0]} pinos, {n[1]} nets, {n[2]} pontos de teste, sem defeitos geometricos)")
     n = verificar(folhas[2]["dataStr"]["shape"], MEGA_PINO)
-    print(f"teste_esquema: folha 3 OK ({n[0]} pinos, {n[1]} nets)")
+    defeitos = lint(folhas[2]["dataStr"]["shape"])
+    assert not defeitos, "folha 3:\n" + "\n".join(defeitos)
+    print(f"teste_esquema: folha 3 OK ({n[0]} pinos, {n[1]} nets, sem defeitos geometricos)")

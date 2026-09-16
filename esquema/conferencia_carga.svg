@@ -454,7 +454,7 @@
 <path d="M 1000 230 h -10" fill="none" stroke="#880000" stroke-width="1"/><text x="986.3" y="234" font-size="7" fill="#0000FF" text-anchor="end">6A</text><text x="990.5" y="229" font-size="7" fill="#0000FF" text-anchor="start">13</text>
 <path d="M 1000 220 h -10" fill="none" stroke="#FF0000" stroke-width="1"/><text x="986.3" y="224" font-size="7" fill="#FF0000" text-anchor="end">VCC</text><text x="990.5" y="219" font-size="7" fill="#FF0000" text-anchor="start">14</text>
 <text x="918" y="204" font-size="12.0" fill="#000080" text-anchor="start" font-weight="normal">U1</text>
-<text x="918" y="304" font-size="10.6" fill="#000080" text-anchor="start" font-weight="normal">74HC04</text>
+<text x="940" y="304" font-size="10.6" fill="#000080" text-anchor="start" font-weight="normal">74HC04</text>
 <polyline points="920 220 860 220" fill="none" stroke="#008800" stroke-width="1"/>
 <text x="856" y="223" font-size="9" fill="#0000FF" text-anchor="end">FALHA</text>
 <polyline points="920 230 890 230" fill="none" stroke="#008800" stroke-width="1"/>
@@ -470,16 +470,18 @@
 <polyline points="1000 270 1060 270" fill="none" stroke="#008800" stroke-width="1"/>
 <polyline points="1000 250 1060 250" fill="none" stroke="#008800" stroke-width="1"/>
 <polyline points="1000 230 1060 230" fill="none" stroke="#008800" stroke-width="1"/>
-<polyline points="920 280 900 280" fill="none" stroke="#008800" stroke-width="1"/>
-<polyline points="900 280 900 290" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="890 290 910 290" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="894 294 906 294" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="898 298 902 298" fill="none" stroke="#000080" stroke-width="1"/>
-<text x="900" y="310" font-size="11" fill="#000080" text-anchor="middle">GND</text>
-<polyline points="1000 220 1020 220" fill="none" stroke="#008800" stroke-width="1"/>
-<polyline points="1020 220 1020 210" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="1012 210 1028 210" fill="none" stroke="#000080" stroke-width="1"/>
-<text x="1020" y="206" font-size="11" fill="#000080" text-anchor="middle">VCC</text>
+<polyline points="920 280 910 280" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="910 280 910 300" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="910 300 910 310" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="900 310 920 310" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="904 314 916 314" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="908 318 912 318" fill="none" stroke="#000080" stroke-width="1"/>
+<text x="910" y="330" font-size="11" fill="#000080" text-anchor="middle">GND</text>
+<polyline points="1000 220 1010 220" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="1010 220 1010 200" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="1010 200 1010 190" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="1002 190 1018 190" fill="none" stroke="#000080" stroke-width="1"/>
+<text x="1010" y="186" font-size="11" fill="#000080" text-anchor="middle">VCC</text>
 <polyline points="1080 270 1060 270" fill="none" stroke="#008800" stroke-width="1"/>
 <polyline points="1080 250 1060 250" fill="none" stroke="#008800" stroke-width="1"/>
 <polyline points="1080 230 1060 230" fill="none" stroke="#008800" stroke-width="1"/>
@@ -513,17 +515,19 @@
 <path d="M 1250 230 h -10" fill="none" stroke="#880000" stroke-width="1"/><text x="1236.3" y="234" font-size="7" fill="#0000FF" text-anchor="end">4B</text><text x="1240.5" y="229" font-size="7" fill="#0000FF" text-anchor="start">13</text>
 <path d="M 1250 220 h -10" fill="none" stroke="#FF0000" stroke-width="1"/><text x="1236.3" y="224" font-size="7" fill="#FF0000" text-anchor="end">VCC</text><text x="1240.5" y="219" font-size="7" fill="#FF0000" text-anchor="start">14</text>
 <text x="1168" y="204" font-size="12.0" fill="#000080" text-anchor="start" font-weight="normal">U2</text>
-<text x="1168" y="304" font-size="10.6" fill="#000080" text-anchor="start" font-weight="normal">74HC32</text>
-<polyline points="1170 280 1150 280" fill="none" stroke="#008800" stroke-width="1"/>
-<polyline points="1150 280 1150 290" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="1140 290 1160 290" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="1144 294 1156 294" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="1148 298 1152 298" fill="none" stroke="#000080" stroke-width="1"/>
-<text x="1150" y="310" font-size="11" fill="#000080" text-anchor="middle">GND</text>
-<polyline points="1250 220 1270 220" fill="none" stroke="#008800" stroke-width="1"/>
-<polyline points="1270 220 1270 210" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="1262 210 1278 210" fill="none" stroke="#000080" stroke-width="1"/>
-<text x="1270" y="206" font-size="11" fill="#000080" text-anchor="middle">VCC</text>
+<text x="1190" y="304" font-size="10.6" fill="#000080" text-anchor="start" font-weight="normal">74HC32</text>
+<polyline points="1170 280 1160 280" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="1160 280 1160 300" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="1160 300 1160 310" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="1150 310 1170 310" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="1154 314 1166 314" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="1158 318 1162 318" fill="none" stroke="#000080" stroke-width="1"/>
+<text x="1160" y="330" font-size="11" fill="#000080" text-anchor="middle">GND</text>
+<polyline points="1250 220 1260 220" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="1260 220 1260 200" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="1260 200 1260 190" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="1252 190 1268 190" fill="none" stroke="#000080" stroke-width="1"/>
+<text x="1260" y="186" font-size="11" fill="#000080" text-anchor="middle">VCC</text>
 <polyline points="1170 220 1110 220" fill="none" stroke="#008800" stroke-width="1"/>
 <text x="1106" y="223" font-size="9" fill="#0000FF" text-anchor="end">X3</text>
 <polyline points="1170 230 1140 230" fill="none" stroke="#008800" stroke-width="1"/>
@@ -569,17 +573,19 @@
 <path d="M 1495 230 h -10" fill="none" stroke="#880000" stroke-width="1"/><text x="1481.3" y="234" font-size="7" fill="#0000FF" text-anchor="end">4B</text><text x="1485.5" y="229" font-size="7" fill="#0000FF" text-anchor="start">13</text>
 <path d="M 1495 220 h -10" fill="none" stroke="#FF0000" stroke-width="1"/><text x="1481.3" y="224" font-size="7" fill="#FF0000" text-anchor="end">VCC</text><text x="1485.5" y="219" font-size="7" fill="#FF0000" text-anchor="start">14</text>
 <text x="1423.5" y="205.7" font-size="12.0" fill="#000080" text-anchor="start" font-weight="normal">U3</text>
-<text x="1423.5" y="302" font-size="10.6" fill="#000080" text-anchor="start" font-weight="normal">74HC86</text>
-<polyline points="1425 280 1405 280" fill="none" stroke="#008800" stroke-width="1"/>
-<polyline points="1405 280 1405 290" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="1395 290 1415 290" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="1399 294 1411 294" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="1403 298 1407 298" fill="none" stroke="#000080" stroke-width="1"/>
-<text x="1405" y="310" font-size="11" fill="#000080" text-anchor="middle">GND</text>
-<polyline points="1495 220 1515 220" fill="none" stroke="#008800" stroke-width="1"/>
-<polyline points="1515 220 1515 210" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="1507 210 1523 210" fill="none" stroke="#000080" stroke-width="1"/>
-<text x="1515" y="206" font-size="11" fill="#000080" text-anchor="middle">VCC</text>
+<text x="1440" y="304" font-size="10.6" fill="#000080" text-anchor="start" font-weight="normal">74HC86</text>
+<polyline points="1425 280 1415 280" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="1415 280 1415 300" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="1415 300 1415 310" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="1405 310 1425 310" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="1409 314 1421 314" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="1413 318 1417 318" fill="none" stroke="#000080" stroke-width="1"/>
+<text x="1415" y="330" font-size="11" fill="#000080" text-anchor="middle">GND</text>
+<polyline points="1495 220 1505 220" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="1505 220 1505 200" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="1505 200 1505 190" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="1497 190 1513 190" fill="none" stroke="#000080" stroke-width="1"/>
+<text x="1505" y="186" font-size="11" fill="#000080" text-anchor="middle">VCC</text>
 <polyline points="1425 220 1365 220" fill="none" stroke="#008800" stroke-width="1"/>
 <text x="1361" y="223" font-size="9" fill="#0000FF" text-anchor="end">X1</text>
 <polyline points="1425 230 1395 230" fill="none" stroke="#008800" stroke-width="1"/>
@@ -630,17 +636,19 @@
 <rect x="1680" y="208" width="60" height="84" rx="2" fill="none" stroke="#880000" stroke-width="1"/>
 <ellipse cx="1685" cy="213" rx="1.5" ry="1.5" fill="#880000" stroke="#880000" stroke-width="1"/>
 <text x="1668" y="204" font-size="12.0" fill="#000080" text-anchor="start" font-weight="normal">U4</text>
-<text x="1668" y="304" font-size="10.6" fill="#000080" text-anchor="start" font-weight="normal">74HC08</text>
-<polyline points="1670 280 1650 280" fill="none" stroke="#008800" stroke-width="1"/>
-<polyline points="1650 280 1650 290" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="1640 290 1660 290" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="1644 294 1656 294" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="1648 298 1652 298" fill="none" stroke="#000080" stroke-width="1"/>
-<text x="1650" y="310" font-size="11" fill="#000080" text-anchor="middle">GND</text>
-<polyline points="1750 220 1770 220" fill="none" stroke="#008800" stroke-width="1"/>
-<polyline points="1770 220 1770 210" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="1762 210 1778 210" fill="none" stroke="#000080" stroke-width="1"/>
-<text x="1770" y="206" font-size="11" fill="#000080" text-anchor="middle">VCC</text>
+<text x="1690" y="304" font-size="10.6" fill="#000080" text-anchor="start" font-weight="normal">74HC08</text>
+<polyline points="1670 280 1660 280" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="1660 280 1660 300" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="1660 300 1660 310" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="1650 310 1670 310" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="1654 314 1666 314" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="1658 318 1662 318" fill="none" stroke="#000080" stroke-width="1"/>
+<text x="1660" y="330" font-size="11" fill="#000080" text-anchor="middle">GND</text>
+<polyline points="1750 220 1760 220" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="1760 220 1760 200" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="1760 200 1760 190" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="1752 190 1768 190" fill="none" stroke="#000080" stroke-width="1"/>
+<text x="1760" y="186" font-size="11" fill="#000080" text-anchor="middle">VCC</text>
 <polyline points="1670 220 1610 220" fill="none" stroke="#008800" stroke-width="1"/>
 <text x="1606" y="223" font-size="9" fill="#0000FF" text-anchor="end">X1</text>
 <polyline points="1670 230 1640 230" fill="none" stroke="#008800" stroke-width="1"/>
@@ -687,17 +695,19 @@
 <rect x="1930" y="208" width="60" height="84" rx="2" fill="none" stroke="#880000" stroke-width="1"/>
 <ellipse cx="1935" cy="213" rx="1.5" ry="1.5" fill="#880000" stroke="#880000" stroke-width="1"/>
 <text x="1918" y="204" font-size="12.0" fill="#000080" text-anchor="start" font-weight="normal">U5</text>
-<text x="1918" y="304" font-size="10.6" fill="#000080" text-anchor="start" font-weight="normal">74HC08</text>
-<polyline points="1920 280 1900 280" fill="none" stroke="#008800" stroke-width="1"/>
-<polyline points="1900 280 1900 290" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="1890 290 1910 290" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="1894 294 1906 294" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="1898 298 1902 298" fill="none" stroke="#000080" stroke-width="1"/>
-<text x="1900" y="310" font-size="11" fill="#000080" text-anchor="middle">GND</text>
-<polyline points="2000 220 2020 220" fill="none" stroke="#008800" stroke-width="1"/>
-<polyline points="2020 220 2020 210" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="2012 210 2028 210" fill="none" stroke="#000080" stroke-width="1"/>
-<text x="2020" y="206" font-size="11" fill="#000080" text-anchor="middle">VCC</text>
+<text x="1940" y="304" font-size="10.6" fill="#000080" text-anchor="start" font-weight="normal">74HC08</text>
+<polyline points="1920 280 1910 280" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="1910 280 1910 300" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="1910 300 1910 310" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="1900 310 1920 310" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="1904 314 1916 314" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="1908 318 1912 318" fill="none" stroke="#000080" stroke-width="1"/>
+<text x="1910" y="330" font-size="11" fill="#000080" text-anchor="middle">GND</text>
+<polyline points="2000 220 2010 220" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="2010 220 2010 200" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="2010 200 2010 190" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="2002 190 2018 190" fill="none" stroke="#000080" stroke-width="1"/>
+<text x="2010" y="186" font-size="11" fill="#000080" text-anchor="middle">VCC</text>
 <polyline points="1920 220 1860 220" fill="none" stroke="#008800" stroke-width="1"/>
 <text x="1856" y="223" font-size="9" fill="#0000FF" text-anchor="end">nFALHA</text>
 <polyline points="1920 230 1890 230" fill="none" stroke="#008800" stroke-width="1"/>
@@ -720,13 +730,13 @@
 <polyline points="2000 230 2060 230" fill="none" stroke="#008800" stroke-width="1"/>
 <polyline points="2080 240 2030 240" fill="none" stroke="#008800" stroke-width="1"/>
 <polyline points="2080 230 2060 230" fill="none" stroke="#008800" stroke-width="1"/>
-<polyline points="2080 230 2080 260" fill="none" stroke="#008800" stroke-width="1"/>
-<circle cx="2080" cy="240" r="2.5" fill="#CC0000"/>
-<polyline points="2080 260 2080 270" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="2070 270 2090 270" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="2074 274 2086 274" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="2078 278 2082 278" fill="none" stroke="#000080" stroke-width="1"/>
-<text x="2080" y="290" font-size="11" fill="#000080" text-anchor="middle">GND</text>
+<polyline points="2080 240 2080 200 2100 200" fill="none" stroke="#008800" stroke-width="1"/>
+<circle cx="2080" cy="230" r="2.5" fill="#CC0000"/>
+<polyline points="2100 200 2100 210" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="2090 210 2110 210" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="2094 214 2106 214" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="2098 218 2102 218" fill="none" stroke="#000080" stroke-width="1"/>
+<text x="2100" y="230" font-size="11" fill="#000080" text-anchor="middle">GND</text>
 <text x="1845" y="350" font-size="9.3" font-family="Liberation Mono, DejaVu Sans Mono, monospace" font-weight="normal" fill="#000000" text-anchor="start" xml:space="preserve">1,2&gt;3:  H = nFALHA . IGUAL</text>
 <text x="1845" y="362" font-size="9.3" font-family="Liberation Mono, DejaVu Sans Mono, monospace" font-weight="normal" fill="#000000" text-anchor="start" xml:space="preserve">4,5&gt;6:  CONFERIR = nFALHA . DIFERENTE</text>
 <text x="1845" y="374" font-size="9.3" font-family="Liberation Mono, DejaVu Sans Mono, monospace" font-weight="normal" fill="#000000" text-anchor="start" xml:space="preserve">9,10&gt;8:  LIBERADO = H . nEXCESSO</text>
@@ -756,7 +766,7 @@
 <path d="M 2340 310 h -20" fill="none" stroke="#000000" stroke-width="1"/><text x="2317" y="313" font-size="7" fill="#000000" text-anchor="end">GND</text><text x="2326" y="309" font-size="7" fill="#000000" text-anchor="start">8</text>
 <path d="M 2240 310 h 20" fill="none" stroke="#FF0000" stroke-width="1"/><text x="2263" y="313" font-size="7" fill="#FF0000" text-anchor="start">VCC</text><text x="2254" y="309" font-size="7" fill="#FF0000" text-anchor="end">16</text>
 <text x="2238.5" y="175.7" font-size="12.0" fill="#000080" text-anchor="start" font-weight="normal">U6</text>
-<text x="2238.5" y="332" font-size="10.6" fill="#000080" text-anchor="start" font-weight="normal">74HC283</text>
+<text x="2270" y="332" font-size="10.6" fill="#000080" text-anchor="start" font-weight="normal">74HC283</text>
 <polyline points="2240 190 2180 190" fill="none" stroke="#008800" stroke-width="1"/>
 <text x="2176" y="193" font-size="9" fill="#0000FF" text-anchor="end">A0e</text>
 <polyline points="2240 240 2210 240" fill="none" stroke="#008800" stroke-width="1"/>
@@ -780,16 +790,18 @@
 <polyline points="2240 290 2180 290" fill="none" stroke="#008800" stroke-width="1"/>
 <polyline points="2340 270 2400 270" fill="none" stroke="#008800" stroke-width="1"/>
 <text x="2404" y="273" font-size="9" fill="#0000FF" text-anchor="start">C_OUT</text>
-<polyline points="2340 310 2360 310" fill="none" stroke="#008800" stroke-width="1"/>
-<polyline points="2360 310 2360 320" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="2350 320 2370 320" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="2354 324 2366 324" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="2358 328 2362 328" fill="none" stroke="#000080" stroke-width="1"/>
-<text x="2360" y="340" font-size="11" fill="#000080" text-anchor="middle">GND</text>
-<polyline points="2240 310 2220 310" fill="none" stroke="#008800" stroke-width="1"/>
-<polyline points="2220 310 2220 300" fill="none" stroke="#000080" stroke-width="1"/>
-<polyline points="2212 300 2228 300" fill="none" stroke="#000080" stroke-width="1"/>
-<text x="2220" y="296" font-size="11" fill="#000080" text-anchor="middle">VCC</text>
+<polyline points="2340 310 2350 310" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="2350 310 2350 330" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="2350 330 2350 340" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="2340 340 2360 340" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="2344 344 2356 344" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="2348 348 2352 348" fill="none" stroke="#000080" stroke-width="1"/>
+<text x="2350" y="360" font-size="11" fill="#000080" text-anchor="middle">GND</text>
+<polyline points="2240 310 2230 310" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="2230 310 2230 350" fill="none" stroke="#008800" stroke-width="1"/>
+<polyline points="2230 350 2230 340" fill="none" stroke="#000080" stroke-width="1"/>
+<polyline points="2222 340 2238 340" fill="none" stroke="#000080" stroke-width="1"/>
+<text x="2230" y="336" font-size="11" fill="#000080" text-anchor="middle">VCC</text>
 <polyline points="2160 210 2210 210" fill="none" stroke="#008800" stroke-width="1"/>
 <polyline points="2160 260 2180 260" fill="none" stroke="#008800" stroke-width="1"/>
 <polyline points="2160 220 2210 220" fill="none" stroke="#008800" stroke-width="1"/>

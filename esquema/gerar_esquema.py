@@ -229,17 +229,19 @@ class Folha:
         """Toco + rotulo em cada pino ligado do CI. Pinos de alimentacao viram bandeiras;
         entradas ociosas ao GND vao a um barramento lateral com uma bandeira so.
         Comprimentos alternados por paridade do pino, para os rotulos nao se empilharem."""
-        ociosas = {}
+        ociosas, sinais, ycentro = {}, {}, sum(y for _, y in q.values()) / len(q)
         for num, nome_net in NET[des].items():
             d = s.fora(num)
             if s.nomes.get(num, "").upper() in ("VCC", "GND", "VDD", "VSS"):
-                self.toco_flag(q[num], d, nome_net)
+                self.bandeira_L(q[num], d, nome_net, ycentro)
             elif nome_net == "GND":
                 ociosas.setdefault(d, []).append(self.toco(q[num], d, ln=ln[int(num) % 2]))
             else:
                 self.toco(q[num], d, NOME.get(nome_net, nome_net), ln[int(num) % 2])
-        for d, pontos in ociosas.items():
-            self.entradas_gnd(pontos, d[0])
+                sinais.setdefault(d, []).append(q[num][1])
+        for d, pontos in ociosas.items():        # ociosas acima dos sinais: barramento sobe, para a bandeira nao cair nos rotulos
+            topo = bool(sinais.get(d)) and max(y for _, y in pontos) < min(sinais[d])
+            self.entradas_gnd(pontos, d[0], topo)
 
     def toco_flag(self, p, d, tipo, ln=20):
         self.flag(tipo, *self.toco(p, d, ln=ln))
@@ -250,18 +252,29 @@ class Folha:
         p, s = self.lib(f"TP{self.tp}", "TP", x, y, nome, val_visivel=False)
         self.toco(p["1"], s.fora("1"), nome)
 
-    def entradas_gnd(self, pontos, lado=-1):
-        """Entradas nao usadas: barramento curto (a esquerda se lado < 0, a direita se > 0) ate uma bandeira GND."""
+    def entradas_gnd(self, pontos, lado=-1, topo=False):
+        """Entradas nao usadas: barramento curto (a esquerda se lado < 0, a direita se > 0) ate uma bandeira GND,
+        embaixo (padrao) ou em cima (topo=True: a bandeira fica ao lado do barramento, acima do primeiro toco)."""
         xs = [p[0] for p in pontos]
         ys = [p[1] for p in pontos]
-        bx, by = (min(xs) - 20 if lado < 0 else max(xs) + 20), max(ys) + 20
+        bx = min(xs) - 20 if lado < 0 else max(xs) + 20
         for x, y in pontos:
             self.fio([(bx, y), (x, y)])
-        self.fio([(bx, min(ys)), (bx, by)])
-        for y in ys:                    # no EasyEDA, fio que termina no meio de outro so liga com ponto de juncao;
-            if y != min(ys):            # a ponta de cima do barramento e encontro de pontas, dispensa
-                self.juncao(bx, y)
-        self.flag("GND", bx, by)
+        # no EasyEDA, fio que termina no meio de outro so liga com ponto de juncao; a ponta do barramento dispensa
+        if topo:
+            by = min(ys) - 30
+            self.fio([(bx, max(ys)), (bx, by), (bx + 20 * lado, by)])
+            for y in ys:
+                if y != max(ys):
+                    self.juncao(bx, y)
+            self.flag("GND", bx + 20 * lado, by)
+        else:
+            by = max(ys) + 20
+            self.fio([(bx, min(ys)), (bx, by)])
+            for y in ys:
+                if y != min(ys):
+                    self.juncao(bx, y)
+            self.flag("GND", bx, by)
 
     def banco_leds(self, x, y0, passo, itens, r_chave="R2K2", led_valor=False, rotulo=True, ramais=None):
         """Fileiras 'net -> resistor -> LED -> GND'. itens: (net, R, D, chave do LED).
@@ -290,18 +303,21 @@ class Folha:
 
     # ---- folha 3: tudo por fio. Cada sinal desce/sobe ate um canal de trilhas horizontais.
     def bandeira_L(self, p, d, tipo, ycentro):
-        """Bandeira de alimentacao afastada dos tocos vizinhos: 10 para fora do pino, 20 para longe do centro do CI."""
+        """Bandeira de alimentacao afastada dos tocos vizinhos: 10 para fora do pino e 20 para longe do centro
+        do CI (40 quando o desenho da bandeira - VCC para cima, GND para baixo - apontaria de volta ao CI)."""
         e = self.toco(p, d, ln=10)
-        fim = (e[0], e[1] + (20 if p[1] > ycentro else -20))
+        baixo = p[1] > ycentro
+        ln = 40 if (tipo == "VCC") == baixo else 20
+        fim = (e[0], e[1] + (ln if baixo else -ln))
         self.fio([e, fim])
         self.flag(tipo, *fim)
 
-    def pinos_fiados(self, des, q, s, ycentro):
+    def pinos_fiados(self, des, q, s):
         """Alimentacao por bandeira; cada outro pino ligado recebe um toco e vira ponto de descida da sua
         net (entradas ociosas: net 'GND@U'). Por lado, os tocos tem comprimentos distintos (30, 40, ...):
         quem sobe e mais longo quanto mais baixo, quem desce e mais longo quanto mais alto - assim nenhuma
         descida cruza o toco de um vizinho, e nenhuma ponta de fio cai em cima de outro fio."""
-        lados = {}
+        lados, ycentro = {}, sum(y for _, y in q.values()) / len(q)
         for num, rede in NET[des].items():
             d = s.fora(num)
             if s.nomes.get(num, "").upper() in ("VCC", "GND", "VDD", "VSS"):
@@ -471,7 +487,7 @@ def folha_esquema():
     f.moldura(810, 80, 1310, 560, "2, 4, 5 e 7. Logica - validacao, comparador, habilitacao e LEDs de status (uma caixa por CI; equacoes por porta abaixo)")
     for i, des in enumerate(("U1", "U2", "U3", "U4", "U5")):
         x, y = 960 + i * 250, 250
-        q, s = f.lib(des, DEV[des], x, y, DEV[des])
+        q, s = f.lib(des, DEV[des], x, y, DEV[des], pos_val=(x - 20, y + 54))
         f.pinos_rotulados(des, q, s)
         for k, linha in enumerate(alocacao(des)):
             f.texto(x - 115, 350 + k * 12, linha, "7pt", fam="Courier New")
@@ -483,7 +499,7 @@ def folha_esquema():
 
     # ---- bloco 6: somador --------------------------------------------------
     f.moldura(2140, 80, 530, 560, "6. Somador 74HC283 - C_in = 0, bits superiores em 0, S3..S0 nos LEDs")
-    q, s = f.lib("U6", "74HC283", 2290, 250, DEV["U6"])
+    q, s = f.lib("U6", "74HC283", 2290, 250, DEV["U6"], pos_val=(2270, 332))
     f.pinos_rotulados("U6", q, s)
     f.texto(2160, 380, "Indice 1 do datasheet = LSB: A0e/B0e nos pinos 5/6, A1e/B1e nos pinos 3/2.", "8pt", "#444444")
     f.texto(2160, 394, "3 + 3 = 0110: o carry do estagio 1 aparece em S2. S3 e C_OUT ficam em 0", "8pt", "#444444")
@@ -680,8 +696,8 @@ def folha_montagem():
     yi = 440
     for k, des in enumerate(("U1", "U2", "U3", "U4", "U5", "U6")):
         x = 1000 + 300 * k
-        q, s = f.lib(des, DEV[des], x, yi, DEV[des])
-        f.pinos_fiados(des, q, s, yi)
+        q, s = f.lib(des, DEV[des], x, yi, DEV[des], pos_val=(x - 20, yi + (82 if DEV[des] == "74HC283" else 54)))
+        f.pinos_fiados(des, q, s)
 
     # ---- pecas de baixo: botoes, LEDs de status e da soma, capacitores (descidas sobem ate o canal)
     yc = 1120
