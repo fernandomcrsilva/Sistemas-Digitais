@@ -65,6 +65,7 @@ class Folha:
         self._n = 0
         self.tp = 0
         self.bom = True                              # False: pecas da folha fora da BOM e da PCB (folha 3)
+        self.gotas = {}                              # net -> pontos de descida ate o canal de trilhas (folha 3)
 
     def gid(self):
         self._n += 1
@@ -90,6 +91,42 @@ class Folha:
         px = round(float(tam[:-2]) * 1.33, 1)
         f = MONO if "Courier" in fam else FONTE
         self.svg.append(f'<text x="{x:g}" y="{y:g}" font-size="{px}" font-family="{f}" font-weight="{peso}" fill="{cor}" text-anchor="{anc}" xml:space="preserve">{esc(s)}</text>')
+
+    def poli(self, seq, cor="#000000", larg=1):
+        """Linha grafica (nao e fio): moldura, bloco de titulo."""
+        self.shape.append(f"PL~{pts(seq)}~{cor}~{larg}~0~none~{self.gid()}~0")
+        self.svg.append(f'<polyline points="{pts(seq)}" fill="none" stroke="{cor}" stroke-width="{larg}"/>')
+
+    def moldura_folha(self, w, h, titulo, folha, data, autor, empresa):
+        """Moldura com zonas (1-8 / A-E) e bloco de titulo no canto inferior direito, como as folhas do EasyEDA."""
+        for (x, y, ww, hh, larg) in ((20, 20, w - 40, h - 40, 2), (50, 50, w - 100, h - 100, 1)):
+            self.poli([(x, y), (x + ww, y), (x + ww, y + hh), (x, y + hh), (x, y)], "#000000", larg)
+        nc, nl = 8, 5
+        for k in range(nc):
+            x0, x1 = 50 + k * (w - 100) / nc, 50 + (k + 1) * (w - 100) / nc
+            if k:
+                self.poli([(x0, 20), (x0, 50)]), self.poli([(x0, h - 50), (x0, h - 20)])
+            for y in (42, h - 28):
+                self.texto((x0 + x1) / 2, y, str(k + 1), "10pt", anc="middle")
+        for k in range(nl):
+            y0, y1 = 50 + k * (h - 100) / nl, 50 + (k + 1) * (h - 100) / nl
+            if k:
+                self.poli([(20, y0), (50, y0)]), self.poli([(w - 50, y0), (w - 20, y0)])
+            for x in (35, w - 35):
+                self.texto(x, (y0 + y1) / 2 + 5, "ABCDE"[k], "10pt", anc="middle")
+        bx, by, bw, bh = w - 770, h - 180, 720, 130
+        self.poli([(bx, by), (bx + bw, by), (bx + bw, by + bh), (bx, by + bh), (bx, by)], "#000000", 2)
+        for dy in (40, 70, 100):
+            self.poli([(bx, by + dy), (bx + bw, by + dy)])
+        self.poli([(bx + 540, by), (bx + 540, by + 100)]), self.poli([(bx + 110, by + 40), (bx + 110, by + bh)])
+        self.texto(bx + 10, by + 16, "TITLE:", "8pt", "#444444")
+        self.texto(bx + 60, by + 31, titulo, "12pt", peso="bold")
+        self.texto(bx + 550, by + 16, "REV:", "8pt", "#444444"), self.texto(bx + 600, by + 31, "1.0", "11pt", peso="bold")
+        self.texto(bx + 10, by + 60, "Company:", "8pt", "#444444"), self.texto(bx + 120, by + 60, empresa, "9pt")
+        self.texto(bx + 550, by + 60, "Sheet:", "8pt", "#444444"), self.texto(bx + 610, by + 60, folha, "9pt")
+        self.texto(bx + 10, by + 90, "Date:", "8pt", "#444444"), self.texto(bx + 120, by + 90, data, "9pt")
+        self.texto(bx + 550, by + 90, "EasyEDA Std", "8pt", "#444444")
+        self.texto(bx + 10, by + 120, "Drawn By:", "8pt", "#444444"), self.texto(bx + 120, by + 120, autor, "9pt")
 
     def moldura(self, x, y, w, h, titulo):
         self.shape.append(f"R~{x:g}~{y:g}~~~{w:g}~{h:g}~#0000FF~1~1~none~{self.gid()}~0")
@@ -221,14 +258,17 @@ class Folha:
         for x, y in pontos:
             self.fio([(bx, y), (x, y)])
         self.fio([(bx, min(ys)), (bx, by)])
-        for y in ys[1:]:
-            self.juncao(bx, y)
+        for y in ys:                    # no EasyEDA, fio que termina no meio de outro so liga com ponto de juncao;
+            if y != min(ys):            # a ponta de cima do barramento e encontro de pontas, dispensa
+                self.juncao(bx, y)
         self.flag("GND", bx, by)
 
-    def banco_leds(self, x, y0, passo, itens, r_chave="R2K2", led_valor=False):
+    def banco_leds(self, x, y0, passo, itens, r_chave="R2K2", led_valor=False, rotulo=True, ramais=None):
         """Fileiras 'net -> resistor -> LED -> GND'. itens: (net, R, D, chave do LED).
         O fio de entrada comeca em (x - 60, y); o catodo vai a um GND comum a direita.
-        led_valor: a cor vira o nome do LED (simbolo generico da folha 3, sem codigo de peca)."""
+        led_valor: a cor vira o nome do LED (simbolo generico da folha 3, sem codigo de peca).
+        rotulo=False: sem rotulo de net; ramais: comprimento extra do fio de entrada por fileira,
+        cuja ponta vira ponto de descida ao canal (folha 3, tudo por fio)."""
         for i, (nome, r, d, chave) in enumerate(itens):
             y = y0 + i * passo
             pr, _ = self.lib(r, r_chave, x, y, VALOR[r], pos_des=(x - 20, y - 8), pos_val=(x - 8, y + 16))
@@ -236,13 +276,73 @@ class Folha:
             self.fio([(x - 60, y), pr["1"]])
             self.fio([pr["2"], pd["1"]])
             self.fio([pd["2"], (x + 140, y)])
-            if nome:
+            if nome and rotulo:
                 self.netlabel(x - 60, y, nome, "L")
+            if ramais is not None:
+                if ramais[i]:
+                    self.fio([(x - 60 - ramais[i], y), (x - 60, y)])
+                self.gotas.setdefault(nome, []).append((x - 60 - ramais[i], y))
         yb = y0 + (len(itens) - 1) * passo
         self.fio([(x + 140, y0), (x + 140, yb + 20)])
         for i in range(1, len(itens)):
             self.juncao(x + 140, y0 + i * passo)
         self.flag("GND", x + 140, yb + 20)
+
+    # ---- folha 3: tudo por fio. Cada sinal desce/sobe ate um canal de trilhas horizontais.
+    def bandeira_L(self, p, d, tipo, ycentro):
+        """Bandeira de alimentacao afastada dos tocos vizinhos: 10 para fora do pino, 20 para longe do centro do CI."""
+        e = self.toco(p, d, ln=10)
+        fim = (e[0], e[1] + (20 if p[1] > ycentro else -20))
+        self.fio([e, fim])
+        self.flag(tipo, *fim)
+
+    def pinos_fiados(self, des, q, s, ycentro):
+        """Alimentacao por bandeira; cada outro pino ligado recebe um toco e vira ponto de descida da sua
+        net (entradas ociosas: net 'GND@U'). Por lado, os tocos tem comprimentos distintos (30, 40, ...):
+        quem sobe e mais longo quanto mais baixo, quem desce e mais longo quanto mais alto - assim nenhuma
+        descida cruza o toco de um vizinho, e nenhuma ponta de fio cai em cima de outro fio."""
+        lados = {}
+        for num, rede in NET[des].items():
+            d = s.fora(num)
+            if s.nomes.get(num, "").upper() in ("VCC", "GND", "VDD", "VSS"):
+                self.bandeira_L(q[num], d, rede, ycentro)
+            elif rede == "GND":
+                lados.setdefault(d, []).append((num, f"GND@{des}"))
+            elif rede not in SOZINHAS:
+                lados.setdefault(d, []).append((num, NOME.get(rede, rede)))
+        for d, lst in lados.items():
+            sobem = sorted((q[n][1], n, r) for n, r in lst if CANAL.get(r, "B") == "T")
+            descem = sorted((-q[n][1], n, r) for n, r in lst if CANAL.get(r, "B") == "B")
+            for k, (_, n, r) in enumerate(sobem + descem):
+                self.gotas.setdefault(r, []).append(self.toco(q[n], d, ln=30 + 10 * k))
+
+    def rotear(self, nets, y0, bandeira=None):
+        """Canal de trilhas horizontais a partir de y0 (passo 10): cada net ganha uma trilha, reaproveitada
+        entre nets cujos vaos em x nao se sobrepoem (left-edge). Desenha as descidas ate a trilha, a trilha
+        e as juncoes; com `bandeira`, a trilha termina numa bandeira (entradas ociosas ao GND).
+        Devolve o y logo abaixo da ultima trilha."""
+        fim = []
+        for net in sorted(nets, key=lambda n: min(self.gotas[n])[0]):
+            pts = sorted(self.gotas[net])
+            assert len({x for x, _ in pts}) == len(pts), f"{net}: duas descidas no mesmo x"
+            x0, x1 = pts[0][0], pts[-1][0] + (20 if bandeira else 0)
+            k = next((i for i, fx in enumerate(fim) if fx + 20 < x0), None)
+            if k is None:
+                k = len(fim)
+                fim.append(x1)
+            else:
+                fim[k] = x1
+            yt = y0 + 10 * k
+            for x, y in pts:
+                self.fio([(x, y), (x, yt)])
+            if x1 > x0:
+                self.fio([(x0, yt), (x1, yt)])
+            for x, _ in pts[1:-1]:
+                self.juncao(x, yt)
+            if bandeira:
+                self.juncao(pts[-1][0], yt)
+                self.flag(bandeira, x1, yt)
+        return y0 + 10 * len(fim)
 
     def caixa(self, des, nome, x, y, pinos_esq, pinos_dir, w=100, passo=20, topo=None, base=None):
         """Retangulo generico com pinos nomeados (usado so para o modulo Arduino, que nao e peca de BOM)."""
@@ -533,19 +633,26 @@ def folha_notas():
 # ================================================================ folha 3
 MEGA_PINO = {**{str(22 + b): f"N0_{b}" for b in range(10)}, "32": "B_0", "33": "B_1",
              "A0": "A0_CURSOR", "A1": "A1_CURSOR", "5V": "VCC", "GND.": "GND"}   # pino do simbolo MEGA -> net
+CANAL = {"X0": "T", "X1": "T", "X2": "T", "X3": "T"}        # trilhas acima dos CIs; as demais nets, abaixo
+SOZINHAS = {n for n in {p for pins in NET.values() for p in pins.values()}
+            if sum(list(pins.values()).count(n) for pins in NET.values()) == 1}   # nets de um pino so (C_OUT, cursores)
 
 
 def folha_montagem():
-    """O circuito da folha 1 redesenhado como diagrama de montagem: o Arduino (simbolo da biblioteca
-    de usuarios do EasyEDA) no centro e pecas genericas da Commons Library em volta, ligadas por fios."""
-    f = Folha(2400, 780)
+    """O circuito completo ligado fio a fio, no estilo das folhas de exemplo do EasyEDA: Arduino (simbolo
+    da biblioteca de usuarios) e pecas da Commons Library; os sinais correm num canal de trilhas horizontais
+    (uma trilha por net) com descidas ate cada pino; moldura com zonas e bloco de titulo."""
+    W, H = 2700, 1500
+    f = Folha(W, H)
     f.bom = False                                    # BOM e PCB vem da folha 1
-    f.texto(30, 30, "Trabalho AP1 - Sistemas Digitais 2026.2 - Turma 6a - Folha 3/4: montagem - Arduino Mega 2560 com pecas da Commons Library do EasyEDA", "14pt", peso="bold")
-    f.texto(30, 48, f"Integrantes: {INTEGRANTES}     Prof. Clayton J A Silva", "9pt")
-    f.texto(30, 64, "Mesma fiacao da folha 1 (gerar_netlist.py) com os simbolos genericos do painel Commons Library (R_AXIAL, R_3386P, C_RAD, LED-TH-5mm, K4-6x6) e o Arduino da biblioteca de usuarios. As pecas desta folha ficam fora da BOM e da PCB.", "8pt", "#444444")
+    f.moldura_folha(W, H, "Conferencia de carga para inspecao", "3/4", "2026-09-15", INTEGRANTES,
+                    "Sistemas Digitais 2026.2 - Turma 6a - Prof. Clayton J A Silva")
+    f.texto(70, 80, "Trabalho AP1 - Folha 3/4: circuito completo ligado fio a fio - Arduino Mega 2560 e pecas da Commons Library do EasyEDA", "14pt", peso="bold")
+    f.texto(70, 98, f"Integrantes: {INTEGRANTES}", "9pt")
+    f.texto(70, 114, "Mesma fiacao da folha 1 (gerar_netlist.py). Os sinais correm nas trilhas horizontais (uma por net); fio que cruza outro sem ponto nao liga. Pecas desta folha fora da BOM e da PCB.", "8pt", "#444444")
 
-    # ---- Arduino no centro: 5 V e GND por bandeira, trimpots nos analogicos, D22-D33 nos LEDs
-    mx, my = 340, 340
+    # ---- Arduino, trimpots e o banco de LEDs de N0/B; ramais de X0-X3, B0, B1 para o canal
+    mx, my = 340, 440
     m, sm = f.lib("M1", "MEGA", mx, my, "Arduino Mega 2560", pos_val=(mx + 40, my - 226))
     f.toco_flag(m["5V"], sm.fora("5V"), "VCC")
     f.toco_flag(m["GND."], sm.fora("GND."), "GND")
@@ -555,51 +662,61 @@ def folha_montagem():
         f.fio([c, (c[0], m[pino][1]), m[pino]])
         f.toco_flag(q["1"], s.fora("1"), "VCC")
         f.toco_flag(q["3"], s.fora("3"), "GND")
-    px = mx + 100                                    # x dos pinos digitais do lado direito
+    px, xb = mx + 100, mx + 360                      # x dos pinos digitais; x do banco de LEDs
     desl = [20, 30, 40, 50, 60, 70, 80, 70, 60, 50, 40, 30]   # leque: pinos a passo 10 -> fileiras a passo 40, sem cruzar
     itens = []
     for i in range(12):
         pino, ry = str(22 + i), my - 100 + 40 * i
-        f.fio([m[pino], (px + desl[i], m[pino][1]), (px + desl[i], ry), (px + 100, ry)])
-        itens.append((NOME[MEGA_PINO[pino]], f"R{i + 1}", f"D{i + 1}", "LED_5MM_VM"))
-    f.banco_leds(px + 160, my - 100, 40, itens, "R_AXIAL", led_valor=True)
-    f.texto(50, 730, "N0 = analogRead(A0) em D22-D31 e B = N1 mod 4 em D32-D33: um LED por bit, 2,2 k em serie. X = N0 mod 16 = x3x2x1x0, A = x1x0.", "8pt", "#444444")
+        f.fio([m[pino], (px + desl[i], m[pino][1]), (px + desl[i], ry), (xb - 60, ry)])
+        itens.append((None, f"R{i + 1}", f"D{i + 1}", "LED_5MM_VM"))
+        rede = NOME[MEGA_PINO[pino]]
+        if rede in ("X0", "X1", "X2", "X3", "B0", "B1"):        # ramal com juncao no fio do leque
+            bx = px + 100 + 10 * (i if i < 4 else i - 6)
+            f.juncao(bx, ry)
+            f.gotas.setdefault(rede, []).append((bx, ry))
+    f.banco_leds(xb, my - 100, 40, itens, "R_AXIAL", led_valor=True)
 
-    # ---- logica: os seis CIs (caixas DIP da LCSC; a Commons Library nao tem portas) com rotulos de net
-    for i, des in enumerate(("U1", "U2", "U3", "U4", "U5", "U6")):
-        x, y = 960 + i * 250, 230
-        q, s = f.lib(des, DEV[des], x, y, DEV[des])
-        f.pinos_rotulados(des, q, s)
-    f.texto(840, 100, "Logica (blocos 2, 4, 5, 6 e 7 da folha 1): rotulos iguais ligam-se entre si e com as fileiras dos LEDs; equacoes por porta na folha 1.", "8pt", "#444444")
+    # ---- os seis CIs em linha: alimentacao por bandeira, cada sinal desce/sobe ate o canal
+    yi = 440
+    for k, des in enumerate(("U1", "U2", "U3", "U4", "U5", "U6")):
+        x = 1000 + 300 * k
+        q, s = f.lib(des, DEV[des], x, yi, DEV[des])
+        f.pinos_fiados(des, q, s, yi)
 
-    # ---- botoes R = P1P0 (1-2 = 5 V, 3-4 = sinal com pull-down de 10 k)
+    # ---- pecas de baixo: botoes, LEDs de status e da soma, capacitores (descidas sobem ate o canal)
+    yc = 1120
     for i, (sw, rpd) in enumerate((("SW2", "Rpd2"), ("SW1", "Rpd1"))):
-        x, y = 940 + i * 220, 555
+        x, y = 940 + i * 280, yc + 5                 # nos em x = 1000 e 1280, sob U1 e U2
         q, s = f.lib(sw, "BOTAO_6X6", x, y, "tatil 6x6", pos_des=(x - 10, y - 20))
         a, b = f.toco(q["2"], s.fora("2"), ln=15), f.toco(q["1"], s.fora("1"), ln=15)
         f.fio([a, b])
         f.flag("VCC", *a)
         a, b = f.toco(q["4"], s.fora("4"), ln=15), f.toco(q["3"], s.fora("3"), ln=15)
         f.fio([a, b])
-        no = f.toco(a, (1, 0), NOME.get(NET[sw]["3"], NET[sw]["3"]))
+        no = f.toco(a, (1, 0))
+        f.juncao(*no)
+        f.gotas.setdefault(NOME.get(NET[sw]["3"], NET[sw]["3"]), []).append(no)
         r, sr = f.lib(rpd, "R_AXIAL", no[0] + 40, no[1] + 45, VALOR[rpd])
         f.fio([no, (no[0], no[1] + 45), r["1"]])
         f.toco_flag(r["2"], sr.fora("2"), "GND")
-    f.texto(880, 500, "Botoes (bloco 3): solto = 0 pelo pull-down, pressionado = 1.", "8pt", "#444444")
-
-    # ---- LEDs de status e da soma, capacitores de desacoplamento
-    f.banco_leds(1480, 520, 40, [("CONFERIR", "R17", "D17", "LED_5MM_VM"), ("ALARME", "R18", "D18", "LED_5MM_VM"),
-                                  ("LIBERADO", "R19", "D19", "LED_5MM_VD")], "R_AXIAL", led_valor=True)
-    f.texto(1400, 500, "Status: exatamente um aceso.", "8pt", "#444444")
-    f.banco_leds(1780, 520, 40, [(f"S{k}", f"R{13 + k}", f"D{13 + k}", "LED_5MM_VM") for k in range(4)], "R_AXIAL", led_valor=True)
-    f.texto(1700, 500, "Soma S3..S0 (U6).", "8pt", "#444444")
+    f.banco_leds(1660, yc, 40, [("CONFERIR", "R17", "D17", "LED_5MM_VM"), ("ALARME", "R18", "D18", "LED_5MM_VM"),
+                                ("LIBERADO", "R19", "D19", "LED_5MM_VD")], "R_AXIAL", led_valor=True, rotulo=False, ramais=(0, 10, 20))
+    f.banco_leds(1960, yc, 40, [(f"S{k}", f"R{13 + k}", f"D{13 + k}", "LED_5MM_VM") for k in range(4)],
+                 "R_AXIAL", led_valor=True, rotulo=False, ramais=(0, 10, 20, 30))
     for n in range(1, 7):
-        x, y = 2020 + ((n - 1) % 3) * 120, 540 + ((n - 1) // 3) * 80
+        x, y = 2160 + ((n - 1) % 3) * 120, yc + ((n - 1) // 3) * 80
         q, s = f.lib(f"C{n}", "C_RAD", x, y, VALOR[f"C{n}"])
         f.toco_flag(q["1"], s.fora("1"), "GND")
         f.toco_flag(q["2"], s.fora("2"), "VCC")
         f.texto(x + 14, y + 46, f"U{n}", "7pt", "#444444")
-    f.texto(1980, 500, "100 nF junto ao VCC de cada CI.", "8pt", "#444444")
+
+    # ---- canais: X0-X3 acima dos CIs; todo o resto abaixo do banco de LEDs; entradas ociosas ao GND por ultimo
+    todos = [p for pts in f.gotas.values() for p in pts]
+    assert len({x for x, _ in todos}) == len(todos), "duas descidas no mesmo x"
+    f.rotear([n for n in f.gotas if CANAL.get(n) == "T"], 140)
+    y = f.rotear([n for n in f.gotas if CANAL.get(n, "B") == "B" and not n.startswith("GND@")], 840)
+    y = f.rotear([n for n in f.gotas if n.startswith("GND@")], y + 10, "GND")
+    assert y + 70 <= yc, f"canal ate {y}, pecas de baixo em {yc}"
     return f
 
 

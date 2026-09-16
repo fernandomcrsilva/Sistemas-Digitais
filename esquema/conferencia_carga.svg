@@ -484,8 +484,8 @@
 <polyline points="1080 250 1060 250" fill="none" stroke="#008800" stroke-width="1"/>
 <polyline points="1080 230 1060 230" fill="none" stroke="#008800" stroke-width="1"/>
 <polyline points="1080 230 1080 290" fill="none" stroke="#008800" stroke-width="1"/>
+<circle cx="1080" cy="270" r="2.5" fill="#CC0000"/>
 <circle cx="1080" cy="250" r="2.5" fill="#CC0000"/>
-<circle cx="1080" cy="230" r="2.5" fill="#CC0000"/>
 <polyline points="1080 290 1080 300" fill="none" stroke="#000080" stroke-width="1"/>
 <polyline points="1070 300 1090 300" fill="none" stroke="#000080" stroke-width="1"/>
 <polyline points="1074 304 1086 304" fill="none" stroke="#000080" stroke-width="1"/>
@@ -601,9 +601,9 @@
 <polyline points="1575 240 1525 240" fill="none" stroke="#008800" stroke-width="1"/>
 <polyline points="1575 230 1555 230" fill="none" stroke="#008800" stroke-width="1"/>
 <polyline points="1575 230 1575 290" fill="none" stroke="#008800" stroke-width="1"/>
+<circle cx="1575" cy="270" r="2.5" fill="#CC0000"/>
 <circle cx="1575" cy="260" r="2.5" fill="#CC0000"/>
 <circle cx="1575" cy="240" r="2.5" fill="#CC0000"/>
-<circle cx="1575" cy="230" r="2.5" fill="#CC0000"/>
 <polyline points="1575 290 1575 300" fill="none" stroke="#000080" stroke-width="1"/>
 <polyline points="1565 300 1585 300" fill="none" stroke="#000080" stroke-width="1"/>
 <polyline points="1569 304 1581 304" fill="none" stroke="#000080" stroke-width="1"/>
@@ -721,7 +721,7 @@
 <polyline points="2080 240 2030 240" fill="none" stroke="#008800" stroke-width="1"/>
 <polyline points="2080 230 2060 230" fill="none" stroke="#008800" stroke-width="1"/>
 <polyline points="2080 230 2080 260" fill="none" stroke="#008800" stroke-width="1"/>
-<circle cx="2080" cy="230" r="2.5" fill="#CC0000"/>
+<circle cx="2080" cy="240" r="2.5" fill="#CC0000"/>
 <polyline points="2080 260 2080 270" fill="none" stroke="#000080" stroke-width="1"/>
 <polyline points="2070 270 2090 270" fill="none" stroke="#000080" stroke-width="1"/>
 <polyline points="2074 274 2086 274" fill="none" stroke="#000080" stroke-width="1"/>

@@ -39,8 +39,8 @@ Entrega e apresentação: **02/10/2026**, turma 6a.
 
 > Gerado por [`../esquema/gerar_esquema.py`](../esquema/gerar_esquema.py):
 > `conferencia_carga.json` (4 folhas: circuito com símbolos da biblioteca LCSC, notas,
-> montagem no estilo dos exemplos do EasyEDA — Arduino da biblioteca e peças da Commons
-> Library — e protoboard) e `conferencia_carga.pdf` (4 páginas). Falta só preencher
+> circuito completo ligado fio a fio com moldura e legenda — Arduino da biblioteca e
+> peças da Commons Library — e protoboard) e `conferencia_carga.pdf` (4 páginas). Falta só preencher
 > `INTEGRANTES` no início do gerador.
 
 - [x] Arduino Mega com 5 V e GND comuns

@@ -6,7 +6,7 @@ Projeto EasyEDA editável e a exportação em PDF.
 
 | Arquivo | O que é |
 | ------- | ------- |
-| `conferencia_carga.json` | Projeto EasyEDA Std com **quatro folhas**: 1 = o circuito que será montado, com **símbolos da biblioteca LCSC** (footprint e código de peça em cada componente); 2 = notas de modelagem e registro de testes; 3 = **montagem no estilo dos exemplos do EasyEDA** (Arduino da biblioteca no centro, peças da Commons Library em volta, ligadas por fios); 4 = montagem em protoboard |
+| `conferencia_carga.json` | Projeto EasyEDA Std com **quatro folhas**: 1 = o circuito que será montado, com **símbolos da biblioteca LCSC** (footprint e código de peça em cada componente); 2 = notas de modelagem e registro de testes; 3 = **circuito completo ligado fio a fio**, no estilo das folhas de exemplo do EasyEDA (moldura com zonas e bloco de título; Arduino da biblioteca e peças da Commons Library; sem rótulos de net); 4 = montagem em protoboard |
 | `conferencia_carga.pdf` | As quatro folhas exportadas, uma por página (entregável) |
 | `conferencia_carga_pcb.json` | **Placa de circuito impresso** no EasyEDA Std: 2 camadas, THT, roteada |
 | `conferencia_carga_pcb.svg` / `.png` | Prévia da placa (vermelho = topo, azul = fundo, amarelo = silk) |
@@ -17,7 +17,7 @@ Projeto EasyEDA editável e a exportação em PDF.
 | `conferencia_carga_protoboard.md` | Lista de montagem furo a furo, na ordem de montar (alimentação, CIs, jumpers, LEDs, fios) |
 | `gerar_protoboard.py` | Gera o desenho (nos formatos EasyEDA e SVG) e a lista da mesma netlist; aborta se alguma tira ficar sem furo ou com dois sinais |
 | `teste_netlist.py` | **Simula o circuito porta a porta** a partir da netlist e confere o plano de testes inteiro (validação, comparador, somador, bloqueio, 12 casos de integração). Termina com `teste_netlist: OK` |
-| `teste_esquema.py` | **Extrai a conectividade das folhas 1 e 3** (fios, pinos, rótulos, bandeiras) do jeito que o EasyEDA faz e confere pino a pino contra a netlist. Termina com `teste_esquema: folha 1 OK` e `folha 3 OK` |
+| `teste_esquema.py` | **Extrai a conectividade das folhas 1 e 3** com as regras do EasyEDA (fio liga em fio ou pino pelas pontas; encostar no meio de um fio só liga com ponto de junção; rótulos e bandeiras) e confere pino a pino contra a netlist. Termina com `teste_esquema: folha 1 OK` e `folha 3 OK` |
 | `biblioteca.py` + `lib/*.json` | Símbolos das folhas 1 e 3, guardados em `lib/` para gerar offline: as peças LCSC e o Arduino da biblioteca de usuários vêm da API do EasyEDA (`/api/components/<uuid>`); os itens do painel **Commons Library** não passam pela API — estão embutidos no JS do editor (`main.min.js`) e `extrair_comuns()` os lê de lá. `python3 biblioteca.py` baixa o que faltar e lista os pinos |
 
 **Abrir no EasyEDA:** <https://easyeda.com/editor> → Arquivo → Abrir →
@@ -38,11 +38,15 @@ axiais 1/4 W, 100 nF cerâmico. O roteamento é automático e simples (grade de
 Verificado no editor (v6.5.57): as 58 nets do gerenciador de design batem com
 a netlist de referência; as 6 nets extras de 1 pino são as saídas das portas
 não usadas (U1D–F, U3C–D, U5D). 17 pontos de teste e 16 pinos do Mega ligados.
-O projeto foi reaberto no editor (Arquivo → Abrir → EasyEDA...) em 15/09/2026,
-com os símbolos da biblioteca na folha 1, e a folha 3 foi importada à parte no
-mesmo dia: todas renderizaram e, na folha 3, cada peça mostra "Adicionar à BOM:
-Não" e "Converter para PCB: Não". Como visitante o editor não exporta BOM nem
-salva; faça isso na sua conta.
+O projeto foi reaberto no editor (Arquivo → Abrir → EasyEDA...) em 15/09/2026 e a
+folha 3 foi importada à parte no mesmo dia: o Gerente de Design listou 57
+componentes e 57 redes ligadas — as mesmas da netlist, menos C_OUT, que nessa
+folha fica só no pino do somador — e avisos apenas nos pinos livres do Mega, nas
+saídas não usadas dos CIs e em C_OUT; cada peça mostra "Adicionar à BOM: Não" e
+"Converter para PCB: Não". Lição que o editor deu: fio que termina no meio de
+outro só liga com ponto de junção (três entradas ociosas ficaram soltas até isso
+ser corrigido; `teste_esquema.py` agora aplica a regra). Como visitante o editor
+não exporta BOM nem salva; faça isso na sua conta.
 
 **Símbolos da folha 1.** Cada peça é um símbolo da biblioteca LCSC do EasyEDA
 (THT), com footprint e código de peça: SN74HC04N (C2886), SN74HC32N (C2894),
@@ -58,18 +62,27 @@ a netlist segue: o botão tátil tem 4 pinos (1-2 e 3-4 ligados internamente; 5 
 em 1, sinal em 3); nos capacitores o pino 2 é o VCC (fica em cima no símbolo);
 nos três LEDs o pino 1 é o ânodo.
 
-**Folha 3 (montagem).** A mesma fiação redesenhada como nos exemplos do EasyEDA:
-o Arduino no centro e as peças em volta, ligadas por fios. O Mega é o símbolo
+**Folha 3 (circuito completo, fio a fio).** A mesma fiação redesenhada como nas
+folhas de exemplo do EasyEDA: moldura com zonas 1–8 / A–E e bloco de título
+(TITLE, REV, Company, Sheet, Date, Drawn By), Arduino à esquerda, peças em volta e
+**nenhum rótulo de net** — só fios e bandeiras VCC/GND. O Mega é o símbolo
 `ARDUINOMEGA2560` da biblioteca de usuários (caixa com D0–D53, A0–A15, 5V e GND
 nas bordas) — o painel Commons Library não tem Arduino, e o `MEGA_DEVICE` da
 biblioteca Sistema desenha a placa com os pinos dentro do contorno, sem como
 ligar fio. As demais peças são do painel Commons Library: `R_AXIAL-0.4_EU`,
 `R_3386P_EU` (trimpot), `C_RAD-0.2_EU`, `LED-TH-5mm_R`/`_G` e `K4-6×6_TH`
 (botão de 4 pinos, 1-2 de um lado e 3-4 do outro). Os CIs continuam DIP da LCSC,
-porque o painel não tem portas lógicas. D22–D33 vão por fio (em leque) até as
-fileiras resistor → LED; os CIs se ligam por rótulo de net. Todas as peças da
-folha 3 ficam **fora da BOM e da PCB** (`add_into_bom`/`convert_to_pcb = none`):
-a BOM e a placa vêm da folha 1, senão os designadores apareceriam em dobro.
+porque o painel não tem portas lógicas. Os sinais correm num barramento de
+trilhas horizontais (uma trilha por net, reaproveitada entre nets cujos vãos em x
+não se sobrepõem) com descidas até cada pino: X0–X3 passam por cima dos CIs, o
+resto por baixo do banco de LEDs; entradas ociosas vão ao GND por trilhas curtas
+com bandeira. Os tocos de cada lado de CI têm comprimentos distintos (quem sobe é
+mais longo quanto mais baixo, quem desce quanto mais alto), de modo que nenhuma
+descida cruza o toco de um vizinho e nenhuma ponta de fio cai em cima de outro
+fio; há ponto de junção só onde liga — fio que cruza outro sem ponto não liga.
+Todas as peças da folha 3 ficam **fora da BOM e da PCB** (`add_into_bom` /
+`convert_to_pcb = none`): a BOM e a placa vêm da folha 1, senão os designadores
+apareceriam em dobro.
 
 **Protoboard:** placa 1 recebe o Mega (D22–D33, A0, A1, 5 V, GND), os 19 LEDs
 com resistor atravessando o canal, os potenciômetros e os botões; placa 2 tem

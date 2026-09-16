@@ -40,12 +40,18 @@ class Uniao:
 
 
 def conectividade(shapes):
-    fios, pinos, rotulos = [], [], []           # (id, [pontos]) ; (id, ponto) ; (nome, ponto)
+    """Ilhas de conexao da folha, com as regras do EasyEDA: fio liga em fio ou pino so pelas
+    pontas; encostar no meio de um fio exige ponto de juncao (J); a juncao liga tudo que
+    passa por ela; rotulo e bandeira ligam onde encostam."""
+    fios, pinos, rotulos, juncoes = [], [], [], []      # (id, [pontos]) ; (id, ponto) ; (nome, ponto) ; ponto
     for sh in shapes:
         t = sh.split("~")[0]
         if t == "W":
             v = [float(x) for x in sh.split("~")[1].split()]
             fios.append((f"W{len(fios)}", list(zip(v[::2], v[1::2]))))
+        elif t == "J":
+            c = sh.split("~")
+            juncoes.append((float(c[1]), float(c[2])))
         elif t == "N":
             c = sh.split("~")
             rotulos.append((c[5], (float(c[1]), float(c[2]))))
@@ -65,27 +71,33 @@ def conectividade(shapes):
         for k in range(len(pts)):
             u.unir(fid, (fid, k))
 
-    def toca(ponto):
-        """Ids dos fios/pinos que o ponto encosta."""
+    def mesmo(a, b):
+        return abs(a[0] - b[0]) < EPS and abs(a[1] - b[1]) < EPS
+
+    def toca(ponto, meio=False):
+        """Ids dos fios/pinos que o ponto encosta; meio=True aceita o meio de um fio."""
+        j = meio or any(mesmo(ponto, jp) for jp in juncoes)
         ids = []
         for fid, pts in fios:
-            if any(abs(px - x) < EPS and abs(py - y) < EPS for x, y in pts for px, py in [ponto]) or \
-               any(sobre(ponto, pts[k], pts[k + 1]) for k in range(len(pts) - 1)):
+            if mesmo(ponto, pts[0]) or mesmo(ponto, pts[-1]) or \
+               (j and any(sobre(ponto, pts[k], pts[k + 1]) for k in range(len(pts) - 1))):
                 ids.append(fid)
-        for pid, pt in pinos:
-            if abs(pt[0] - ponto[0]) < EPS and abs(pt[1] - ponto[1]) < EPS:
-                ids.append(pid)
+        ids += [pid for pid, pt in pinos if mesmo(pt, ponto)]
         return ids
 
-    for fid, pts in fios:                       # fio encostando em outro fio ou em pino
+    for fid, pts in fios:                       # ponta de fio em fio ou em pino
         for pt in (pts[0], pts[-1]):
             for outro in toca(pt):
                 u.unir(fid, outro)
-    for pid, pt in pinos:
+    for pid, pt in pinos:                       # pino em ponta de fio (ou no meio, com juncao)
         for outro in toca(pt):
             u.unir(pid, outro)
+    for jp in juncoes:                          # juncao liga tudo que passa por ela
+        ids = toca(jp, meio=True)
+        for outro in ids[1:]:
+            u.unir(ids[0], outro)
     for nome, pt in rotulos:
-        for outro in toca(pt):
+        for outro in toca(pt, meio=True):
             u.unir(("NET", nome), outro)
     grupos = {}
     for pid, _ in pinos:
