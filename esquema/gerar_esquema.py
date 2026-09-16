@@ -649,7 +649,10 @@ def folha_notas():
 # ================================================================ folha 3
 MEGA_PINO = {**{str(22 + b): f"N0_{b}" for b in range(10)}, "32": "B_0", "33": "B_1",
              "A0": "A0_CURSOR", "A1": "A1_CURSOR", "5V": "VCC", "GND.": "GND"}   # pino do simbolo MEGA -> net
-CANAL = {"X0": "T", "X1": "T", "X2": "T", "X3": "T"}        # trilhas acima dos CIs; as demais nets, abaixo
+# canal de cima ("T"): X0-X3 e as nets so entre CIs; canal de baixo (padrao): o que vai ao Mega, aos botoes, aos LEDs
+CANAL = {n: "T" for n in ("X0", "X1", "X2", "X3", "FALHA", "nFALHA", "DIFERENTE", "IGUAL", "EXCESSO", "nEXCESSO",
+                          "H", "d0", "d1", "A0e", "A1e", "B0e", "B1e")}
+ORDEM_CI = ("U3", "U2", "U1", "U5", "U4", "U6")             # ordem do fluxo: comparador, validacao/OR, inversores, status, habilitacao, somador
 SOZINHAS = {n for n in {p for pins in NET.values() for p in pins.values()}
             if sum(list(pins.values()).count(n) for pins in NET.values()) == 1}   # nets de um pino so (C_OUT, cursores)
 
@@ -694,13 +697,13 @@ def folha_montagem():
 
     # ---- os seis CIs em linha: alimentacao por bandeira, cada sinal desce/sobe ate o canal
     yi = 440
-    for k, des in enumerate(("U1", "U2", "U3", "U4", "U5", "U6")):
+    for k, des in enumerate(ORDEM_CI):
         x = 1000 + 300 * k
         q, s = f.lib(des, DEV[des], x, yi, DEV[des], pos_val=(x - 20, yi + (82 if DEV[des] == "74HC283" else 54)))
         f.pinos_fiados(des, q, s)
 
     # ---- pecas de baixo: botoes, LEDs de status e da soma, capacitores (descidas sobem ate o canal)
-    yc = 1120
+    yc = 1000
     for i, (sw, rpd) in enumerate((("SW2", "Rpd2"), ("SW1", "Rpd1"))):
         x, y = 940 + i * 280, yc + 5                 # nos em x = 1000 e 1280, sob U1 e U2
         q, s = f.lib(sw, "BOTAO_6X6", x, y, "tatil 6x6", pos_des=(x - 10, y - 20))
@@ -720,16 +723,17 @@ def folha_montagem():
     f.banco_leds(1960, yc, 40, [(f"S{k}", f"R{13 + k}", f"D{13 + k}", "LED_5MM_VM") for k in range(4)],
                  "R_AXIAL", led_valor=True, rotulo=False, ramais=(0, 10, 20, 30))
     for n in range(1, 7):
-        x, y = 2160 + ((n - 1) % 3) * 120, yc + ((n - 1) // 3) * 80
+        x, y = 2200 + ((n - 1) % 3) * 120, yc + ((n - 1) // 3) * 80
         q, s = f.lib(f"C{n}", "C_RAD", x, y, VALOR[f"C{n}"])
         f.toco_flag(q["1"], s.fora("1"), "GND")
         f.toco_flag(q["2"], s.fora("2"), "VCC")
         f.texto(x + 14, y + 46, f"U{n}", "7pt", "#444444")
 
-    # ---- canais: X0-X3 acima dos CIs; todo o resto abaixo do banco de LEDs; entradas ociosas ao GND por ultimo
+    # ---- canais: nets entre CIs acima deles; o resto abaixo do banco de LEDs; entradas ociosas ao GND por ultimo
     todos = [p for pts in f.gotas.values() for p in pts]
     assert len({x for x, _ in todos}) == len(todos), "duas descidas no mesmo x"
-    f.rotear([n for n in f.gotas if CANAL.get(n) == "T"], 140)
+    y = f.rotear([n for n in f.gotas if CANAL.get(n) == "T"], 230)
+    assert y + 60 <= yi - 30, f"canal de cima ate {y}, CIs em {yi}"
     y = f.rotear([n for n in f.gotas if CANAL.get(n, "B") == "B" and not n.startswith("GND@")], 840)
     y = f.rotear([n for n in f.gotas if n.startswith("GND@")], y + 10, "GND")
     assert y + 70 <= yc, f"canal ate {y}, pecas de baixo em {yc}"
