@@ -2642,5 +2642,5 @@
 <text x="20" y="1000" font-size="8" text-anchor="start" fill="#000" font-weight="normal">- LED: perna longa (anodo) na coluna do resistor; lado chato (catodo) na coluna seguinte, com jumper ao barramento -. Cada LED com 2,2 k em serie.</text>
 <text x="20" y="1012" font-size="8" text-anchor="start" fill="#000" font-weight="normal">- Botoes tateis: usar os dois terminais em diagonal (sao sempre os contatos da chave). Solto = 0 pelo pull-down de 10 k ao barramento -.</text>
 <text x="20" y="1024" font-size="8" text-anchor="start" fill="#000" font-weight="normal">- Se os barramentos da sua protoboard forem partidos no meio (coluna 30/31), emende cada metade com um jumper. 100 nF junto ao VCC de cada CI.</text>
-<text x="20" y="1036" font-size="8" text-anchor="start" fill="#000" font-weight="normal">- Lista furo a furo, na ordem de montagem, em conferencia_carga_protoboard.md. Mesma fiacao do esquema (gerar_netlist.py).</text>
+<text x="20" y="1036" font-size="8" text-anchor="start" fill="#000" font-weight="normal">- Mesma fiacao das folhas 1 e 3.</text>
 </svg>

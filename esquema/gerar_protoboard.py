@@ -405,7 +405,7 @@ def legenda(y):
              "LED: perna longa (anodo) na coluna do resistor; lado chato (catodo) na coluna seguinte, com jumper ao barramento -. Cada LED com 2,2 k em serie.",
              "Botoes tateis: usar os dois terminais em diagonal (sao sempre os contatos da chave). Solto = 0 pelo pull-down de 10 k ao barramento -.",
              "Se os barramentos da sua protoboard forem partidos no meio (coluna 30/31), emende cada metade com um jumper. 100 nF junto ao VCC de cada CI.",
-             "Lista furo a furo, na ordem de montagem, em conferencia_carga_protoboard.md. Mesma fiacao do esquema (gerar_netlist.py)."]
+             "Mesma fiacao das folhas 1 e 3."]
     for i, s in enumerate(notas):
         T(X0, y + 18 + i * 12, "- " + s, 8, "start")
 

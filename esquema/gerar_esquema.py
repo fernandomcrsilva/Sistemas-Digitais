@@ -668,7 +668,7 @@ def folha_montagem():
                     "Sistemas Digitais 2026.2 - Turma 6a - Prof. Clayton J A Silva")
     f.texto(70, 80, "Trabalho AP1 - Folha 3/4: circuito completo ligado fio a fio - Arduino Mega 2560 e pecas da Commons Library do EasyEDA", "14pt", peso="bold")
     f.texto(70, 98, f"Integrantes: {INTEGRANTES}", "9pt")
-    f.texto(70, 114, "Mesma fiacao da folha 1 (gerar_netlist.py). Os sinais correm nas trilhas horizontais (uma por net); fio que cruza outro sem ponto nao liga. Pecas desta folha fora da BOM e da PCB.", "8pt", "#444444")
+    f.texto(70, 114, "Mesma fiacao da folha 1. Os sinais correm nas trilhas horizontais (uma por net); fio que cruza outro sem ponto nao liga. Pecas desta folha fora da BOM e da PCB.", "8pt", "#444444")
 
     # ---- Arduino, trimpots e o banco de LEDs de N0/B; ramais de X0-X3, B0, B1 para o canal
     mx, my = 340, 440
