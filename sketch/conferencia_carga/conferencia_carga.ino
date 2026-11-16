@@ -8,6 +8,7 @@
  *   Guilherme Maranhão - 202301165784
  *   Pietro Baldo Albuquerque - 202502579519
  *   Breno Huf - 202209083149
+ *   Victor Hwang - 202208766005
  *
  * Versao 2 bits: cada potenciometro vira um valor de 0 a 3 (4 faixas de 25%).
  *   0% a 25%    (0 a 255)    -> 00

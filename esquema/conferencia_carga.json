@@ -22,7 +22,7 @@
     "canvas": "CA~1000~1000~#FFFFFF~yes~#CCCCCC~10~2120~820~line~10~pixel~5~0~0",
     "shape": [
      "T~L~30~30~0~#000000~~14pt~bold~normal~~comment~Trabalho AP1 - Sistemas Digitais 2026.2 - Turma 6a - Folha 1/2: conferencia de carga, versao 2 bits (4 CIs 74LS)~1~start~gge1~0",
-     "T~L~30~48~0~#000000~~9pt~normal~normal~~comment~Integrantes: Fernando Mendonca - 202208935079, Guilherme Maranhão - 202301165784, Pietro Baldo Albuquerque - 202502579519, Breno Huf - 202209083149     Prof. Clayton J A Silva~1~start~gge2~0",
+     "T~L~30~48~0~#000000~~9pt~normal~normal~~comment~Integrantes: Fernando Mendonca - 202208935079, Guilherme Maranhão - 202301165784, Pietro Baldo Albuquerque - 202502579519, Breno Huf - 202209083149, Victor Hwang - 202208766005     Prof. Clayton J A Silva~1~start~gge2~0",
      "T~L~30~64~0~#444444~~8pt~normal~normal~~comment~Simbolos LCSC (pecas THT com footprint). O Arduino Mega e um modulo: caixa so com os pinos usados. Ligacoes por rotulo de rede: mesmo nome = mesmo fio.~1~start~gge3~0",
      "R~30~80~~~620~700~#0000FF~1~1~none~gge4~0",
      "T~L~36~94~0~#0000FF~~10pt~bold~normal~~comment~1. Aquisicao: Arduino Mega, trimpots, botoes e LEDs de entrada (X1 X0 = pot. 1, B1 B0 = pot. 2)~1~start~gge5~0",
